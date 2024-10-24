@@ -11,9 +11,9 @@
 /* ************************************************************************** */
 
 #include "libftprintf.h"
-#include "../libft/libft.h"
+#include "../../libft/libft.h"
 
-void	ft_putunsignednbr(unsigned int n)
+void	ft_putnbr(unsigned int n)
 {
 	long long	nbr;
 
@@ -25,32 +25,40 @@ void	ft_putunsignednbr(unsigned int n)
 	}
 	if (nbr > 9)
 	{
-		ft_putunsignednbr(nbr / 10);
+		ft_putnbr(nbr / 10);
 	}
 	ft_putchar_fd((nbr % 10) + '0', 1);
 }
 
-void	ft_putunsignednbr_hex(unsigned int n, int is_upper)
+void	ft_putnbr_hex(unsigned long long n, int is_upper)
 {
-	long long	nbr;
+	unsigned long long nbr;
 
 	nbr = n;
-	if (nbr < 0)
+	if (nbr / 16 != 0)
 	{
-		ft_putchar_fd('-', 1);
-		nbr = -nbr;
+		ft_putnbr_hex(nbr / 16, is_upper);
 	}
-	if (nbr/16 != 0)
-	{
-		ft_putunsignednbr_hex(nbr / 16, is_upper);
+    if (nbr % 16 >= 10 && nbr % 16 <=15 && is_upper)
+        ft_putchar_fd('A' + (nbr % 16 - 10),1);
+    else if (nbr % 16 >= 10 && nbr % 16 <=15)
+        ft_putchar_fd('a' + (nbr % 16 - 10),1);
+    else if (nbr % 16 < 10)
         ft_putchar_fd((nbr % 16) + '0', 1);
+}
+int	print_void(void *p)
+{
+	unsigned long long n;
+
+	n = (unsigned long long)p;
+	if(!n)
+	{
+		ft_putstr_fd("(nil)", 1);
+		return 5;
 	}
-    else if (nbr >= 10 && is_upper)
-        ft_putchar_fd('A' + (nbr - 10),1);
-    else if (nbr >= 10)
-        ft_putchar_fd('a' + (nbr - 10),1);
-    else
-        ft_putchar_fd((nbr) + '0', 1);
+	ft_putstr_fd("0x", 1);
+	ft_putnbr_hex(n, 0);
+	return 0;
 }
 /*int main(void)
 {
